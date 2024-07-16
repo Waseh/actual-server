@@ -18,8 +18,16 @@ export default {
    * Banks on the BEC backend only give information regarding the transaction in additionalInformation
    */
   normalizeTransaction(transaction, _booked) {
+    // Filter out transactions in the future
+    const currentDate = new Date().toISOString().split('T')[0];
+    const date = transaction.bookingDate;
+    if (date > currentDate) {
+      return null;
+    }
+    //
     transaction.remittanceInformationUnstructured =
       transaction.additionalInformation;
+    
 
     return {
       ...transaction,
